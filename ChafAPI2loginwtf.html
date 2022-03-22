@@ -1,0 +1,13 @@
+{% extends 'ChafAPI2base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+{{ wtf.quick_form(form) }}
+   <!-- <form action="#" method="POST"> # means we come back to the same page when we login
+        {{ form.hidden_tag() }}
+        {{ form.name.label }}{{ form.name() }} #we take the fields from the user form
+        {{ form.password() }}
+        {{ form.submit() }}
+        <input type="submit" value="submit"> #this is for the login button
+        </form> -->
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'ChafAPI2base.html' %}
+
+{% block content %}
+    {% for dict_item in crypto_prices %}
+        {% for name, price in dict_item.items() %}
+            <h3>Name: {{ dict_item['name']}}, Price: {{ dict_item['price']}} </h3>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+
+
+
