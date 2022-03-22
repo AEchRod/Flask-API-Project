@@ -83,9 +83,9 @@ def loginwtf():
 def user(usr):
     return f"<h1>{usr}</h1>" """
 
-@app.errorhandler(404) #this is an error handler, with the 404 error code which is produced when client requests page not known.
+"""@app.errorhandler(404) #this is an error handler, with the 404 error code which is produced when client requests page not known.
 def page_not_found(e):
-    return render_template(""), 404
+    return render_template(""), 404 """
 
 @app.route('/portfolio/<string:name>', methods=['GET', 'POST'])
 def create_portfolio(name):
