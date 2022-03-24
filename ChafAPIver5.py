@@ -23,6 +23,8 @@ messages = [{'title': 'Welcome to ChafAPI main page.',
              #'content': 'Message Two Content'}
             ]
 
+portfolio = []
+
 #this is to create a form using flask wtf forms.
 class NameForm(FlaskForm): #this class INHERITS from FlaskForm.
     name = StringField("What is your name?", validators=[DataRequired()]) #the validator ensures the field is not submitted empty.
@@ -34,7 +36,7 @@ def welcomepage():
     #return "Welcome to ChafAPI's main page"
     return render_template('ChafAPI2index.html', messages=messages) #this makes the variable accessible to html.
 
-@app.route('/crypto', methods=['GET'])
+@app.route('/crypto/', methods=['GET'])
 def get_list():
     return jsonify({'crypto_prices': crypto_prices}), render_template('ChafAPI2crypto.html', crypto_prices=crypto_prices) #this converts the store variable, which has a list of dictionaries into a json. we need to convert it to as dict to process it.
 
@@ -44,7 +46,6 @@ def get_prices(name):
     return next(crypto for crypto in crypto_prices if crypto['name'] == name) #next() to search the list of dictionaries.
 
 
-# GET /crypto/<string:name> (get a crypto and return some data about it)
 @app.route('/login', methods=['GET', 'POST']) #<string:name means that our parameter can have a name>
 def login():
     if request.method == "POST": #this check to see if the request method is POST.
@@ -54,53 +55,36 @@ def login():
         return render_template("ChafAPI2login.html")
 
 
-"""@app.route('/loginwtf', methods=['GET', 'POST'])
-def loginwtf():
-    form = NameForm
-    if request.method == "POST":  # this check to see if the request method is POST.
-        return render_template("ChafAPI2loginwtf.html", form=form)"""
-
-"""
-@app.route('/loginwtf', methods=['GET', 'POST']) #when form is first navigated to, the server receives a GET request.
-def loginwtf():
-    #name = None #this is set to None as name is not known
-    form = NameForm() #this variable contains the NameForm() class.
-    if form.validate_on_submit():
-        session['name'] = form.name.data #this makes the app remember by storing in user session
-        return redirect(url_for('loginwtf')) #this will bring us to the same endpoint
-    return render_template("ChafAPI2loginwtf.html", form=form, name=session.get('name')) """
 
 @app.route('/loginwtf', methods=['GET', 'POST']) #when form is first navigated to, the server receives a GET request.
 def loginwtf():
     name = None #this is set to None as name is not known
     form = NameForm() #this variable contains the NameForm() class.
-    if form.validate_on_submit(): #
+    if form.validate_on_submit(): 
         name = form.name.data
         form.name.data = ''
     return render_template("ChafAPI2loginwtf.html", form=form, name=name)
 
-"""@app.route('/<usr>', methods=['GET', 'POST']) #<string:name means that our parameter can have a name>
-def user(usr):
-    return f"<h1>{usr}</h1>" """
 
-"""@app.errorhandler(404) #this is an error handler, with the 404 error code which is produced when client requests page not known.
-def page_not_found(e):
-    return render_template(""), 404 """
+@app.route('/portfolio/', methods=['GET'])
+def create_portfolio():
+
+    return jsonify({'portfolio': portfolio})
+
 
 @app.route('/portfolio/<string:name>', methods=['GET', 'POST'])
-def create_portfolio(name):
+def add_to_portfolio(name):
 
     request_data = request.get_json()
 
-    portfolio = []
-
-    add_portfolio = {
-        "name": name,
-        "price": request_data['price'] #(crypto['price'] for crypto in crypto_prices if crypto['name'] == request_data['name'])
-    }
 
     if request.method == 'POST':
-            if request_data['name'] == name:
+
+        for crypto in crypto_prices:
+            if crypto['name'] == name:
+                add_portfolio = {
+                    "name": request_data['name'],
+                    "price": request_data['price']}
                 portfolio.append(add_portfolio)
                 return jsonify({'portfolio': portfolio})
             else:
